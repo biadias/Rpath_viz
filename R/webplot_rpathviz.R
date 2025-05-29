@@ -10,7 +10,10 @@
 #'  rpath object created from running \code{rpath()}.
 #' @param line.col description.
 #' @param h_spacing horizontal spacing multiplier, it spreads nodes horizontally.
+#' @param node_size_min from scale_value() Minimum value of the new scale (default is 1).
+#' @param node_size_max from scale_value() Maximum value of the new scale (default is 30).
 #' @param fleet_color single color for fleet nodes.
+#' @param groups_palette color palette for non-fleet groups. Default is a vector of colors.
 #' @param text_size size of the text labels.
 #'
 #' @return Returns a plot visualization of the food web.
@@ -18,7 +21,10 @@
 #' @importFrom magrittr `%>%`
 #'
 #' @section Contributors:
-#' webplot function from Rpath by Kerim Aydin
+#' webplot original function from Rpath by Kerim Aydin
+#'
+#' @section Plotting:
+#' Caution: For large food webs see the examples.
 #'
 #' @examples
 #' \dontrun{
@@ -27,31 +33,39 @@
 #' # Plot food web diagram with all groups labeled, including fleets
 #' webplot_rpathviz(Rpath.obj, h_spacing = 3, text_size = 3)
 #'
+#' # Read in Rpath parameter file, generate and name model object
+#' Rpath.obj <- Rpath::rpath(Rpath::Ecosense.EBS, eco.name = "Eastern Bering Sea")
+#' # Plot food web diagram with all groups labeled, including fleets. Follow the steps
+#' # 1) assign the plot to an object
+#' # 2) use ggplot2::ggsave() to save the plot for a fast visualization
+#' wp <- webplot_rpathviz(Rpath.obj, h_spacing = 3, text_size = 3)
+#' ggplot2::ggsave("figures/EBSfoodwebplot2.png", p , width= 16, height= 10)
+#'
+#'
 #' }
 #'
 #' @export
 
- # Load required libraries
- # library(tidyverse)
- # library(tidygraph)
- # library(ggraph)
- # library(purrr)
- # library(igraph)
-
- # Define a color palette generator for non-fleet clusters
- #colors_net <- colorRampPalette(c("#3A9AB2", "#6FB2C1", "#91BAB6", "#A5C2A3",
- #                                 "#BDC881", "#DCCB4E", "#E3B710", "#E79805",
- #                                 "#EC7A05", "#EF5703"))
 
 webplot_rpathviz <- function(Rpath.obj,
                                  eco.name = attr(Rpath.obj, "eco.name"),
                                  line.col = "grey",
                                  h_spacing = 3,
+                                 node_size_min = 1,
+                                 node_size_max = 30,
                                  fleet_color = "#B40F20", # single color for fleet nodes
+                                 groups_palette = c("#EC7604", "#CB7A5C", "#5785C1", "#0B775E"),
                                  text_size= 3)
 {
 
-  colors_net <- grDevices::colorRampPalette(c("#EC7604" , "#CB7A5C", "#5785C1", "#0B775E"))
+  #Number of groups check to determine function plot
+  if (Rpath.obj$NUM_GROUPS > 20) {
+    message("Your food web object has more than 20 functional groups.
+    \nPlotting to the RStudio window will take a while, please be patient...
+    Refer to the examples for large food webs.")
+  }
+
+  colors_net <- grDevices::colorRampPalette(groups_palette)
 
   # Building the nodes with Rpath object.
   nodes <- tibble::tibble(
@@ -76,7 +90,7 @@ webplot_rpathviz <- function(Rpath.obj,
 
   # Compute node size based on Biomass.
   nodes <- nodes %>%
-    dplyr::mutate(node_size = scale_value(Biomass, new_min = 10, new_max = 50))
+    dplyr::mutate(node_size = scale_value(Biomass, node_size_min = 10, node_size_max = 30))
 
   # Build the edge list using the original node IDs.
   allowed_ids <- nodes$id
@@ -175,6 +189,7 @@ webplot_rpathviz <- function(Rpath.obj,
 
   ggraph::set_graph_style(plot_margin = ggplot2::margin(30, 30, 30, 30))
   jitter <- ggplot2::position_jitter(width = 0.1, height = 0.1)
+
 #browser() #for checks
   # Build the ggraph plot
   p <- ggraph::ggraph(lay) +
@@ -183,7 +198,7 @@ webplot_rpathviz <- function(Rpath.obj,
                    color = ggplot2::after_stat(index)),
                    lineend = "round",
                    alpha = 0.30) +
-    ggraph::scale_edge_colour_gradient(low = "#ffd06f", high = "#aadce0", guide = "colorbar") +
+    ggraph::scale_edge_colour_gradient(low = "#ffd06f", high = "#aadce0", guide = "legend") +
     ggraph::geom_edge_loop(ggplot2::aes(edge_width = width, color = ggplot2::after_stat(index)),
                    alpha = 0.85,
                    lineend = "round") +
@@ -228,15 +243,15 @@ webplot_rpathviz <- function(Rpath.obj,
 #' @param x Numeric vector of values to be scaled.
 #' @param orig_min Minimum value of the original scale (default is minimum of x).
 #' @param orig_max Maximum value of the original scale (default is maximum of x).
-#' @param new_min Minimum value of the new scale (default is 1).
-#' @param new_max Maximum value of the new scale (default is 30).
+#' @param node_size_min Minimum value of the new scale (default is 1).
+#' @param node_size_max Maximum value of the new scale (default is 30).
 #'
 #' @noRd
 
 scale_value <- function(x,
                         orig_min = min(x),
                         orig_max = max(x),
-                        new_min = 1,
-                        new_max = 30) {
-  new_min + ((x - orig_min) / (orig_max - orig_min)) * (new_max - new_min)
+                        node_size_min = 1,
+                        node_size_max = 30) {
+  node_size_min + ((x - orig_min) / (orig_max - orig_min)) * (node_size_max - node_size_min)
 }

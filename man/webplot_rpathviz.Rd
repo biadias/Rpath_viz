@@ -9,7 +9,10 @@ webplot_rpathviz(
   eco.name = attr(Rpath.obj, "eco.name"),
   line.col = "grey",
   h_spacing = 3,
+  node_size_min = 1,
+  node_size_max = 30,
   fleet_color = "#B40F20",
+  groups_palette = c("#EC7604", "#CB7A5C", "#5785C1", "#0B775E"),
   text_size = 3
 )
 }
@@ -23,7 +26,13 @@ rpath object created from running \code{rpath()}.}
 
 \item{h_spacing}{horizontal spacing multiplier, it spreads nodes horizontally.}
 
+\item{node_size_min}{from scale_value() Minimum value of the new scale (default is 1).}
+
+\item{node_size_max}{from scale_value() Maximum value of the new scale (default is 30).}
+
 \item{fleet_color}{single color for fleet nodes.}
+
+\item{groups_palette}{color palette for non-fleet groups. Default is a vector of colors.}
 
 \item{text_size}{size of the text labels.}
 }
@@ -40,12 +49,26 @@ add another paragraph
 webplot function from Rpath by Kerim Aydin
 }
 
+\section{Plotting}{
+
+Caution: For large food webs see the examples.
+}
+
 \examples{
 \dontrun{
 # Read in Rpath parameter file, generate and name model object
 Rpath.obj <- Rpath::rpath(Rpath::AB.params, eco.name = "Anchovy Bay")
 # Plot food web diagram with all groups labeled, including fleets
 webplot_rpathviz(Rpath.obj, h_spacing = 3, text_size = 3)
+
+# Read in Rpath parameter file, generate and name model object
+Rpath.obj <- Rpath::rpath(Rpath::Ecosense.EBS, eco.name = "Eastern Bering Sea")
+# Plot food web diagram with all groups labeled, including fleets. Follow the steps
+# 1) assign the plot to an object
+# 2) use ggplot2::ggsave() to save the plot for a fast visualization
+wp <- webplot_rpathviz(Rpath.obj, h_spacing = 3, text_size = 3)
+ggplot2::ggsave("figures/EBSfoodwebplot2.png", p , width= 16, height= 10)
+
 
 }
 
