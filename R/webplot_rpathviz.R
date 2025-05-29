@@ -51,15 +51,6 @@ webplot_rpathviz <- function(Rpath.obj,
                                  text_size= 3)
 {
 
-  # Function to scale node size based on Biomass
-  scale_value <- function(x,
-                          orig_min = min(x),
-                          orig_max = max(x),
-                          new_min = 1,
-                          new_max = 30) {
-    new_min + ((x - orig_min) / (orig_max - orig_min)) * (new_max - new_min)
-  }
-
   colors_net <- grDevices::colorRampPalette(c("#EC7604" , "#CB7A5C", "#5785C1", "#0B775E"))
 
   # Building the nodes with Rpath object.
@@ -230,4 +221,22 @@ webplot_rpathviz <- function(Rpath.obj,
     )
 
   return(p)
+}
+
+#' Function to scale node size based on Biomass
+#'
+#' @param x Numeric vector of values to be scaled.
+#' @param orig_min Minimum value of the original scale (default is minimum of x).
+#' @param orig_max Maximum value of the original scale (default is maximum of x).
+#' @param new_min Minimum value of the new scale (default is 1).
+#' @param new_max Maximum value of the new scale (default is 30).
+#'
+#' @noRd
+
+scale_value <- function(x,
+                        orig_min = min(x),
+                        orig_max = max(x),
+                        new_min = 1,
+                        new_max = 30) {
+  new_min + ((x - orig_min) / (orig_max - orig_min)) * (new_max - new_min)
 }
