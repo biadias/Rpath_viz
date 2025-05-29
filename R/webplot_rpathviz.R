@@ -73,22 +73,23 @@ webplot_rpathviz <- function(Rpath.obj,
     dplyr::mutate(id = GroupNum) %>%
     # Always convert Group to character then factor then numeric
     dplyr::mutate(group = as.numeric(as.factor(as.character(Group))))
-
   # Calculate tot.catch and filter out fleet (type 3) nodes with no tot.catch.
   tot.catch <- Rpath.obj$Landings + Rpath.obj$Discards
   nodes <- nodes %>%
-    dplyr::mutate(fleet_tot = dplyr::if_else(type == 3, sapply((GroupNum - (
-      Rpath.obj$NUM_GROUPS - Rpath.obj$NUM_GEARS
-    )), function(j)
-      base::sum(tot.catch[, j])), NA_real_)) %>%
+    dplyr::mutate(fleet_tot =
+                    dplyr::if_else(type == 3,
+                                   purrr::map_dbl((GroupNum - (Rpath.obj$NUM_GROUPS - Rpath.obj$NUM_GEARS)),
+                                                  ~sum(tot.catch[, .x])),
+                                   NA_real_)) %>%
     dplyr::filter(!(type == 3 & fleet_tot == 0))
 
   # Compute node size based on Biomass.
-  nodes <- nodes %>% dplyr::mutate(node_size = scale_value(Biomass, new_min = 10, new_max = 50))
+  nodes <- nodes %>%
+    dplyr::mutate(node_size = scale_value(Biomass, new_min = 10, new_max = 50))
 
   # Build the edge list using the original node IDs.
   allowed_ids <- nodes$id
-  predators <- nodes %>% dplyr::filter(!(type %in% c(1, 2)))
+  predators <- dplyr::filter(nodes,!(type %in% c(1, 2)))
 
   edge_list <- purrr::map_dfr(predators$id, function(i) {
     node_type <- Rpath.obj$type[i]
@@ -119,8 +120,12 @@ webplot_rpathviz <- function(Rpath.obj,
   edge_list <- edge_list %>% dplyr::mutate(edge_stat = width)
 
   # Re-index nodes to have sequential IDs
-  nodes <- nodes %>% dplyr::arrange(id) %>% dplyr::mutate(new_id = dplyr::row_number())
-  map_ids <- nodes %>% dplyr::select(old_id = id, new_id)
+  nodes <- nodes %>%
+    dplyr::arrange(id) %>%
+    dplyr::mutate(new_id =
+                    dplyr::row_number())
+  map_ids <- nodes %>%
+    dplyr::select(old_id = id, new_id)
 
   edge_list <- edge_list %>%
     dplyr::inner_join(map_ids, by = c("from" = "old_id")) %>%
@@ -130,7 +135,8 @@ webplot_rpathviz <- function(Rpath.obj,
     dplyr::mutate(from = from_new, to = to_new) %>%
     dplyr::select(from, to, width, edge_stat)
 
-  nodes <- nodes %>% dplyr::mutate(id = new_id)
+  nodes <- nodes %>%
+    dplyr::mutate(id = new_id)
 
   # Create the tidygraph object
   graph_obj <- tidygraph::tbl_graph(nodes = nodes,
@@ -142,7 +148,9 @@ webplot_rpathviz <- function(Rpath.obj,
   clust <- igraph::cluster_edge_betweenness(graph_ig)
   mem <- igraph::membership(clust)
   # Add cluster membership to nodes
-  graph_obj <- graph_obj %>% tidygraph::activate(nodes) %>% dplyr::mutate(cluster = as.factor(mem)) #FLAG ####
+  graph_obj <- graph_obj %>%
+    tidygraph::activate(nodes) %>%
+    dplyr::mutate(cluster = as.factor(mem)) #FLAG ####
   # Override cluster for fleet nodes: if type==3, assign cluster = "fleet"
   graph_obj <- graph_obj %>% tidygraph::activate(nodes) %>%
     dplyr::mutate(cluster = dplyr::if_else(type == 3, "fleet", as.character(cluster)))
@@ -151,7 +159,8 @@ webplot_rpathviz <- function(Rpath.obj,
   #(Here I set kk, but would be nice to have the user decide between a few layouts kk, fr, etc.)
   lay <- ggraph::create_layout(graph_obj, layout = "kk")
   if (!"TL" %in% colnames(lay)) {
-    lay <- left_join(lay, tibble::as_tibble(graph_obj, what = "nodes"), by = "id")
+    lay <- dplyr::left_join(lay,
+                            tidygraph::as_tibble(graph_obj, what = "nodes"), by = "id")
   }
   lay$x <- lay$x * h_spacing      # Spread nodes horizontally
   lay$y <- base::as.numeric(lay$TL)  # Adjust vertical spacing
@@ -161,24 +170,29 @@ webplot_rpathviz <- function(Rpath.obj,
 
   # Create a color mapping for node clusters
   # Get all unique cluster values
-  node_levels <- base::sort(base::unique(tidygraph::activate(graph_obj, nodes) %>%
-                                           dplyr::pull(cluster)))
+  node_levels <- base::sort(
+    base::unique(
+    tidygraph::activate(graph_obj, nodes) %>%
+      dplyr::pull(cluster)))
   # Separate fleets from non-fleet clusters
   nonfleet_levels <- base::setdiff(node_levels, "fleet")
   # Assign colors to non-fleet clusters using the palette
   nonfleet_colors <- colors_net(length(nonfleet_levels))
   # Combine with a fixed color for fleets
-  color_mapping <- c("fleet" = fleet_color, stats::setNames(nonfleet_colors, nonfleet_levels))
+  color_mapping <- c("fleet" = fleet_color,
+                     stats::setNames(nonfleet_colors, nonfleet_levels))
 
   ggraph::set_graph_style(plot_margin = ggplot2::margin(30, 30, 30, 30))
   jitter <- ggplot2::position_jitter(width = 0.1, height = 0.1)
-browser()
+#browser() #for checks
   # Build the ggraph plot
   p <- ggraph::ggraph(lay) +
-    ggraph::geom_edge_link(ggplot2::aes(edge_width = edge_list$width, color = ggplot2::after_stat(index)),
+    ggraph::geom_edge_link(
+      ggplot2::aes(edge_width = edge_list$width,
+                   color = ggplot2::after_stat(index)),
                    lineend = "round",
                    alpha = 0.30) +
-    ggraph::scale_edge_colour_gradient(low = "#ffd06f", high = "#aadce0") +
+    ggraph::scale_edge_colour_gradient(low = "#ffd06f", high = "#aadce0", guide = "colorbar") +
     ggraph::geom_edge_loop(ggplot2::aes(edge_width = width, color = ggplot2::after_stat(index)),
                    alpha = 0.85,
                    lineend = "round") +
@@ -202,7 +216,8 @@ browser()
       max.overlaps = Inf
     ) +
     ggplot2::labs(y = "Trophic Level", title = eco.name) +
-    ggplot2::scale_y_continuous(breaks = base::seq(floor(y_min), base::ceiling(y_max), by = 1),
+    ggplot2::scale_y_continuous(breaks = base::seq(floor(y_min),
+                                                   base::ceiling(y_max), by = 1),
                        expand = ggplot2::expansion(c(0.10, 0.10))) +
     ggplot2::scale_x_continuous(expand = ggplot2::expansion(c(0.10, 0.10))) +
     ggplot2::theme_classic() +

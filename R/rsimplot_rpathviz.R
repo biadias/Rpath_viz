@@ -110,7 +110,7 @@ rsimplot_rpathviz <- function(Rsim.output,
     type = 'scatter',
     mode = 'lines'
   ) %>%
-    layout(
+    plotly::layout(
       title = paste("Relative Biomass Over Time:" , rsim_name),
       xaxis = list(title = "Months"),
       yaxis = list(title = "Relative Biomass"),
