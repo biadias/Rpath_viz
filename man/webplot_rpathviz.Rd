@@ -46,7 +46,7 @@ add another paragraph
 }
 \section{Contributors}{
 
-webplot function from Rpath by Kerim Aydin
+webplot original function from Rpath by Kerim Aydin
 }
 
 \section{Plotting}{
@@ -66,7 +66,7 @@ Rpath.obj <- Rpath::rpath(Rpath::Ecosense.EBS, eco.name = "Eastern Bering Sea")
 # Plot food web diagram with all groups labeled, including fleets. Follow the steps
 # 1) assign the plot to an object
 # 2) use ggplot2::ggsave() to save the plot for a fast visualization
-wp <- webplot_rpathviz(Rpath.obj, h_spacing = 3, text_size = 3)
+wp <- webplot_rpathviz(Rpath.obj, h_spacing = 3, text_size = 3, node_size_min = 1, node_size_max = 50)
 ggplot2::ggsave("figures/EBSfoodwebplot2.png", p , width= 16, height= 10)
 
 
