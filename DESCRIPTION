@@ -24,7 +24,8 @@ Imports:
     grDevices,
     igraph,
     colorspace,
-    magrittr
+    magrittr,
+    stats
 Suggests: 
     knitr,
     rmarkdown
