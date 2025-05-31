@@ -1,5 +1,5 @@
 Package: rpathviz
-Title: Beautiful plots for Ecopath/Rpath package
+Title: Beautiful plots for Ecopath models using the Rpath package
 Version: 0.0.0.9000
 Authors@R: c(
     person("Bia", "Dias", , "bia.dias@noaa.gov", role = c("aut", "cre"), comment=c(ORCID="0000-0001-5905-4044")),
@@ -19,6 +19,7 @@ Imports:
     ggplot2,
     tibble,
     tidygraph,
+    tidyselect,
     tidyr,
     ggraph,
     grDevices,

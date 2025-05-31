@@ -32,7 +32,7 @@ rpath object created from running \code{rpath()}.}
 
 \item{fleet_color}{single color for fleet nodes.}
 
-\item{groups_palette}{color palette for non-fleet groups. Default is a vector of colors.}
+\item{groups_palette}{color palette for non-fleet groups. Two palette options rpath_pal_dark and rpath_pal_light.}
 
 \item{text_size}{size of the text labels.}
 }

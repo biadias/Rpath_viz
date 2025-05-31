@@ -65,9 +65,6 @@ webplot_rpathviz <- function(Rpath.obj,
     Refer to the examples for large food webs.")
   }
 
-
-  #colors_net <- grDevices::colorRampPalette(groups_palette)
-
   # Building the nodes with Rpath object.
   nodes <- tibble::tibble(
     GroupNum = 1:length(Rpath.obj$TL),
@@ -156,7 +153,7 @@ webplot_rpathviz <- function(Rpath.obj,
   # Add cluster membership to nodes
   graph_obj <- graph_obj %>%
     tidygraph::activate(nodes) %>%
-    dplyr::mutate(cluster = as.factor(mem)) #FLAG ####
+    dplyr::mutate(cluster = as.factor(mem))
   # Override cluster for fleet nodes: if type==3, assign cluster = "fleet"
   graph_obj <- graph_obj %>% tidygraph::activate(nodes) %>%
     dplyr::mutate(cluster = dplyr::if_else(type == 3, "fleet", as.character(cluster)))
@@ -185,11 +182,10 @@ webplot_rpathviz <- function(Rpath.obj,
   nonfleet_levels <- base::setdiff(node_levels, "fleet")
 
   # Assign colors to non-fleet clusters using the palette
-  #nonfleet_colors <- colors_net(length(nonfleet_levels)) #FLAG ####
   nonfleet_colors <- make_pal(groups_palette, length(nonfleet_levels))
 
   # Combine with a fixed color for fleets
-  color_mapping <- c("fleet" = fleet_color, #FLAG ####
+  color_mapping <- c("fleet" = fleet_color,
                      stats::setNames(nonfleet_colors, nonfleet_levels))
 
   ggraph::set_graph_style(plot_margin = ggplot2::margin(30, 30, 30, 30))

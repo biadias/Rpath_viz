@@ -86,7 +86,7 @@ rsimplot_rpathviz <- function(Rsim.output,
   val_name <- if (rel_bio) "Biomass" else "RelativeBiomass"
   df_long <- tidyr::pivot_longer(
     df,
-    cols      = all_of(data_cols),
+    cols      = tidyselect::all_of(data_cols),
     names_to  = "Species",
     values_to = val_name
   )
@@ -155,7 +155,7 @@ rsimplot_rpathviz <- function(Rsim.output,
   rsim_int_plotly <- plotly::plot_ly(
     data = df_long,
     x = ~ time,
-    y = as.formula(paste0("~", val_name)),
+    y = stats::as.formula(paste0("~", val_name)),
     color = ~ Species,
     colors = my_colors,
     type = 'scatter',
