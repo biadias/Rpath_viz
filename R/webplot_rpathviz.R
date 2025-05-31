@@ -13,7 +13,7 @@
 #' @param node_size_min from scale_value() Minimum value of the new scale (default is 1).
 #' @param node_size_max from scale_value() Maximum value of the new scale (default is 30).
 #' @param fleet_color single color for fleet nodes.
-#' @param groups_palette color palette for non-fleet groups. Default is a vector of colors.
+#' @param groups_palette color palette for non-fleet groups. Two palette options rpath_pal_dark and rpath_pal_light.
 #' @param text_size size of the text labels.
 #'
 #' @return Returns a plot visualization of the food web.
@@ -54,7 +54,7 @@ webplot_rpathviz <- function(Rpath.obj,
                                  node_size_min = 1,
                                  node_size_max = 30,
                                  fleet_color = "#B40F20", # single color for fleet nodes
-                                 groups_palette = c("#EC7604", "#CB7A5C", "#5785C1", "#0B775E"),
+                                 groups_palette = "rpath_pal_dark",
                                  text_size= 3)
 {
 
@@ -65,7 +65,8 @@ webplot_rpathviz <- function(Rpath.obj,
     Refer to the examples for large food webs.")
   }
 
-  colors_net <- grDevices::colorRampPalette(groups_palette)
+
+  #colors_net <- grDevices::colorRampPalette(groups_palette)
 
   # Building the nodes with Rpath object.
   nodes <- tibble::tibble(
@@ -179,12 +180,16 @@ webplot_rpathviz <- function(Rpath.obj,
     base::unique(
     tidygraph::activate(graph_obj, nodes) %>%
       dplyr::pull(cluster)))
+
   # Separate fleets from non-fleet clusters
   nonfleet_levels <- base::setdiff(node_levels, "fleet")
+
   # Assign colors to non-fleet clusters using the palette
-  nonfleet_colors <- colors_net(length(nonfleet_levels))
+  #nonfleet_colors <- colors_net(length(nonfleet_levels)) #FLAG ####
+  nonfleet_colors <- make_pal(groups_palette, length(nonfleet_levels))
+
   # Combine with a fixed color for fleets
-  color_mapping <- c("fleet" = fleet_color,
+  color_mapping <- c("fleet" = fleet_color, #FLAG ####
                      stats::setNames(nonfleet_colors, nonfleet_levels))
 
   ggraph::set_graph_style(plot_margin = ggplot2::margin(30, 30, 30, 30))
@@ -255,3 +260,46 @@ scale_value <- function(x,
                         node_size_max = 30) {
   node_size_min + ((x - orig_min) / (orig_max - orig_min)) * (node_size_max - node_size_min)
 }
+
+
+
+#' Function to scale node size based on Biomass
+#'
+#' @param pal_arg A character string specifying a color palette name, or a vector of colors.
+#' @param n Number of colors to generate from the palette.
+#'
+#' @noRd
+
+rpath_pal_dark  <- c("#EC7604", "#CB7A5C", "#5785C1", "#0B775E")
+rpath_pal_light <- c("#F4AD68", "#E0AF9D", "#9AB6DA", "#6DAD9E")
+
+
+make_pal <- function(pal_arg, n) {
+  # special presets
+  if (is.character(pal_arg) && length(pal_arg)==1 &&
+      pal_arg %in% c("rpath_pal_dark", "rpath_pal_light")) {
+    vec <- get(pal_arg)
+    if (length(vec) < n) vec <- grDevices::colorRampPalette(vec)(n)
+    return(vec[1:n])
+  }
+  # named palette function
+  if (is.character(pal_arg) && length(pal_arg)==1 &&
+      exists(pal_arg, mode="function")) {
+    return(match.fun(pal_arg)(n))
+  }
+  # user-supplied hex vector
+  if (is.character(pal_arg) && length(pal_arg) > 1) {
+    if (length(pal_arg) < n) {
+      return(grDevices::colorRampPalette(pal_arg)(n))
+    } else {
+      return(pal_arg[1:n])
+    }
+  }
+  # fallback
+  if (length(rpath_pal_dark) < n) {
+    grDevices::colorRampPalette(rpath_pal_dark)(n)
+  } else {
+    rpath_pal_dark[1:n]
+  }
+}
+

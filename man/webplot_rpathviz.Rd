@@ -12,7 +12,7 @@ webplot_rpathviz(
   node_size_min = 1,
   node_size_max = 30,
   fleet_color = "#B40F20",
-  groups_palette = c("#EC7604", "#CB7A5C", "#5785C1", "#0B775E"),
+  groups_palette = "rpath_pal_dark",
   text_size = 3
 )
 }
