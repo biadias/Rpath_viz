@@ -20,11 +20,12 @@ Imports:
     tibble,
     tidygraph,
     tidyr,
+    tidyselect,
     ggraph,
     grDevices,
     igraph,
-    colorspace,
     magrittr,
+    rlang,
     stats
 Suggests: 
     knitr,
