@@ -32,7 +32,7 @@ rpath object created from running \code{rpath()}.}
 
 \item{fleet_color}{single color for fleet nodes.}
 
-\item{groups_palette}{color palette for non-fleet groups. Default is a vector of colors.}
+\item{groups_palette}{color palette for non-fleet groups. Two palette options rpath_pal_dark and rpath_pal_light.}
 
 \item{text_size}{size of the text labels.}
 }
@@ -66,7 +66,8 @@ Rpath.obj <- Rpath::rpath(Rpath::Ecosense.EBS, eco.name = "Eastern Bering Sea")
 # Plot food web diagram with all groups labeled, including fleets. Follow the steps
 # 1) assign the plot to an object
 # 2) use ggplot2::ggsave() to save the plot for a fast visualization
-wp <- webplot_rpathviz(Rpath.obj, h_spacing = 3, text_size = 3, node_size_min = 1, node_size_max = 50)
+wp <- webplot_rpathviz(Rpath.obj, h_spacing = 3, text_size = 3,
+node_size_min = 1, node_size_max = 50)
 ggplot2::ggsave("figures/EBSfoodwebplot2.png", p , width= 16, height= 10)
 
 

@@ -43,9 +43,12 @@ library(Rpath)
 runObj <- rsim.scenario(rpath(REco.params), REco.params, years= 1:50)
 Rsim.output <- rsim.run(runObj, years= 1:50)
 # plot the Rsim object two default color blind friendly palettes
-rsimplot_rpathviz(Rsim.output, eco.name= "Anchovy Bay", spname = "all", palette= "rsim_pal_dark")
-rsimplot_rpathviz(Rsim.output, eco.name= "Anchovy Bay", spname = "all", palette= "rsim_pal_light")
-rsimplot_rpathviz(Rsim.output, eco.name= "Anchovy Bay", spname = "Foragefish2", rel_bio=FALSE, palette= "rsim_pal_light")
+rsimplot_rpathviz(Rsim.output, eco.name= "Anchovy Bay", spname = "all",
+palette= "rsim_pal_dark")
+rsimplot_rpathviz(Rsim.output, eco.name= "Anchovy Bay", spname = "all",
+palette= "rsim_pal_light")
+rsimplot_rpathviz(Rsim.output, eco.name= "Anchovy Bay", spname = "Foragefish2",
+rel_bio=FALSE, palette= "rsim_pal_light")
 
 }
 
