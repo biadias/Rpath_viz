@@ -38,7 +38,8 @@
 #' # Plot food web diagram with all groups labeled, including fleets. Follow the steps
 #' # 1) assign the plot to an object
 #' # 2) use ggplot2::ggsave() to save the plot for a fast visualization
-#' wp <- webplot_rpathviz(Rpath.obj, h_spacing = 3, text_size = 3, node_size_min = 1, node_size_max = 50)
+#' wp <- webplot_rpathviz(Rpath.obj, h_spacing = 3, text_size = 3,
+#' node_size_min = 1, node_size_max = 50)
 #' ggplot2::ggsave("figures/EBSfoodwebplot2.png", p , width= 16, height= 10)
 #'
 #'
@@ -57,7 +58,7 @@ webplot_rpathviz <- function(Rpath.obj,
                                  groups_palette = "rpath_pal_dark",
                                  text_size= 3)
 {
-
+  Biomass <- Group <- GroupNum <- cluster <- edge_stat <- fleet_tot <- from <- from_new <- id <- index <- new_id <- node_size <- to <- to_new <- type <- width <- NULL
   #Number of groups check to determine function plot
   if (Rpath.obj$NUM_GROUPS > 20) {
     message("Your food web object has more than 20 functional groups.
