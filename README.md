@@ -1,4 +1,4 @@
-# Rpath_viz
+# rpathviz
 
 <!-- badges: start -->
   [![R-CMD-check](https://github.com/biadias/rpathviz/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/biadias/rpathviz/actions/workflows/R-CMD-check.yaml)

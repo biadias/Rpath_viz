@@ -1,11 +1,11 @@
 Package: rpathviz
-Title: What the Package Does (One Line, Title Case)
+Title: Beautiful plots for Ecopath/Rpath package
 Version: 0.0.0.9000
 Authors@R: c(
-    person("Bia", "Dias", , "first.last@example.com", role = c("aut", "cre")),
-    person("Kerim", "Aydin", , "first.last@example.com", role = c("aut"))
+    person("Bia", "Dias", , "bia.dias@noaa.gov", role = c("aut", "cre"), comment=c(ORCID="0000-0001-5905-4044")),
+    person("Kerim", "Aydin", , "kerim.aydin@noaa.gov", role = c("aut"))
     )
-Description: What the package does (one paragraph).
+Description: Visualization package companion for Ecopath/Rpath. You load a Rpath object and rpathviz provides beautiful plots of your food web and simulations using ggraph and plotly. 
 License: MIT + file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
@@ -20,11 +20,13 @@ Imports:
     tibble,
     tidygraph,
     tidyr,
+    tidyselect,
     ggraph,
     grDevices,
     igraph,
-    colorspace,
-    magrittr
+    magrittr,
+    rlang,
+    stats
 Suggests: 
     knitr,
     rmarkdown

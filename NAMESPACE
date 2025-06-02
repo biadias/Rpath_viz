@@ -3,3 +3,4 @@
 export(rsimplot_rpathviz)
 export(webplot_rpathviz)
 importFrom(magrittr,`%>%`)
+importFrom(rlang,`%||%`)

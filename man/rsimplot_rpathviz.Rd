@@ -6,19 +6,22 @@
 \usage{
 rsimplot_rpathviz(
   Rsim.output,
+  eco.name = NULL,
   spname = "all",
-  indplot = FALSE,
-  palette = "rainbow"
+  rel_bio = FALSE,
+  palette = "rsim_pal_dark"
 )
 }
 \arguments{
-\item{Rsim.output}{An object of class Rsim}
+\item{Rsim.output}{An object of class Rsim.}
 
-\item{spname}{A character vector of species names to plot}
+\item{eco.name}{Optional name of the ecosystem.}
 
-\item{indplot}{Logical value of whether to plot a single group or multiple groups}
+\item{spname}{A character vector of species names to plot. If "all", all species will be plotted and rel_bio will use the default FALSE.}
 
-\item{palette}{A character vector of colors to use}
+\item{rel_bio}{Logical value of whether to plot a single group biomass as relative or absolute value.}
+
+\item{palette}{A character vector of colors to use.}
 }
 \value{
 An interactive plotly object
@@ -39,8 +42,13 @@ rsim.plot function from Rpath by Kerim Aydin
 library(Rpath)
 runObj <- rsim.scenario(rpath(REco.params), REco.params, years= 1:50)
 Rsim.output <- rsim.run(runObj, years= 1:50)
-# plot the Rsim object
-rsimplot_rpathviz(Rsim.output)
+# plot the Rsim object two default color blind friendly palettes
+rsimplot_rpathviz(Rsim.output, eco.name= "Anchovy Bay", spname = "all",
+palette= "rsim_pal_dark")
+rsimplot_rpathviz(Rsim.output, eco.name= "Anchovy Bay", spname = "all",
+palette= "rsim_pal_light")
+rsimplot_rpathviz(Rsim.output, eco.name= "Anchovy Bay", spname = "Foragefish2",
+rel_bio=FALSE, palette= "rsim_pal_light")
 
 }
 
