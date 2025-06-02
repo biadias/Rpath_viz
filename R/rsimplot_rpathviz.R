@@ -13,6 +13,9 @@
 #'
 #' @return An interactive plotly object
 #'
+#' @importFrom magrittr `%>%`
+#' @importFrom rlang `%||%`
+#'
 #' @section Contributors:
 #' rsim.plot function from Rpath by Kerim Aydin
 #'
@@ -23,9 +26,12 @@
 #' runObj <- rsim.scenario(rpath(REco.params), REco.params, years= 1:50)
 #' Rsim.output <- rsim.run(runObj, years= 1:50)
 #' # plot the Rsim object two default color blind friendly palettes
-#' rsimplot_rpathviz(Rsim.output, eco.name= "Anchovy Bay", spname = "all", palette= "rsim_pal_dark")
-#' rsimplot_rpathviz(Rsim.output, eco.name= "Anchovy Bay", spname = "all", palette= "rsim_pal_light")
-#' rsimplot_rpathviz(Rsim.output, eco.name= "Anchovy Bay", spname = "Foragefish2", rel_bio=FALSE, palette= "rsim_pal_light")
+#' rsimplot_rpathviz(Rsim.output, eco.name= "Anchovy Bay", spname = "all",
+#' palette= "rsim_pal_dark")
+#' rsimplot_rpathviz(Rsim.output, eco.name= "Anchovy Bay", spname = "all",
+#' palette= "rsim_pal_light")
+#' rsimplot_rpathviz(Rsim.output, eco.name= "Anchovy Bay", spname = "Foragefish2",
+#' rel_bio=FALSE, palette= "rsim_pal_light")
 #'
 #' }
 #'
@@ -86,7 +92,7 @@ rsimplot_rpathviz <- function(Rsim.output,
   val_name <- if (rel_bio) "Biomass" else "RelativeBiomass"
   df_long <- tidyr::pivot_longer(
     df,
-    cols      = all_of(data_cols),
+    cols      = tidyselect::all_of(data_cols),
     names_to  = "Species",
     values_to = val_name
   )
@@ -155,7 +161,7 @@ rsimplot_rpathviz <- function(Rsim.output,
   rsim_int_plotly <- plotly::plot_ly(
     data = df_long,
     x = ~ time,
-    y = as.formula(paste0("~", val_name)),
+    y = stats::as.formula(paste0("~", val_name)),
     color = ~ Species,
     colors = my_colors,
     type = 'scatter',
