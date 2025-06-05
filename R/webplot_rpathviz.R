@@ -31,14 +31,14 @@
 #' # Read in Rpath parameter file, generate and name model object
 #' Rpath.obj <- Rpath::rpath(Rpath::AB.params, eco.name = "Anchovy Bay")
 #' # Plot food web diagram with all groups labeled, including fleets
-#' webplot_rpathviz(Rpath.obj, h_spacing = 3, text_size = 3)
+#' webplotviz(Rpath.obj, h_spacing = 3, text_size = 3)
 #'
 #' # Read in Rpath parameter file, generate and name model object
 #' Rpath.obj <- Rpath::rpath(Rpath::Ecosense.EBS, eco.name = "Eastern Bering Sea")
 #' # Plot food web diagram with all groups labeled, including fleets. Follow the steps
 #' # 1) assign the plot to an object
 #' # 2) use ggplot2::ggsave() to save the plot for a fast visualization
-#' wp <- webplot_rpathviz(Rpath.obj, h_spacing = 3, text_size = 3,
+#' wp <- webplotviz(Rpath.obj, h_spacing = 3, text_size = 3,
 #' node_size_min = 1, node_size_max = 50)
 #' ggplot2::ggsave("figures/EBSfoodwebplot2.png", p , width= 16, height= 10)
 #'
@@ -48,7 +48,7 @@
 #' @export
 
 
-webplot_rpathviz <- function(Rpath.obj,
+webplotviz <- function(Rpath.obj,
                                  eco.name = attr(Rpath.obj, "eco.name"),
                                  line.col = "grey",
                                  h_spacing = 3,
