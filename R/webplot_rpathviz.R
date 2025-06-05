@@ -40,7 +40,7 @@
 #' # 2) use ggplot2::ggsave() to save the plot for a fast visualization
 #' wp <- webplot_rpathviz(Rpath.obj, h_spacing = 3, text_size = 3,
 #' node_size_min = 1, node_size_max = 50)
-#' ggplot2::ggsave("figures/EBSfoodwebplot2.png", p , width= 16, height= 10)
+#' ggplot2::ggsave("figures/EBSfoodwebplot2.png", wp , width= 16, height= 10)
 #'
 #'
 #' }
@@ -219,6 +219,7 @@ webplot_rpathviz <- function(Rpath.obj,
     ggplot2::scale_color_manual(values = color_mapping) +
     ggraph::geom_node_text(
       ggplot2::aes(label = Group),
+      family="sans",
       size = text_size,
       color = "gray15",
       repel = TRUE,
@@ -241,7 +242,7 @@ webplot_rpathviz <- function(Rpath.obj,
       axis.line.x = ggplot2::element_blank()
     )
 
-  return(p)
+  base::suppressWarnings(return(p))
 }
 
 #' Function to scale node size based on Biomass

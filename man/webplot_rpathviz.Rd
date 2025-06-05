@@ -68,7 +68,7 @@ Rpath.obj <- Rpath::rpath(Rpath::Ecosense.EBS, eco.name = "Eastern Bering Sea")
 # 2) use ggplot2::ggsave() to save the plot for a fast visualization
 wp <- webplot_rpathviz(Rpath.obj, h_spacing = 3, text_size = 3,
 node_size_min = 1, node_size_max = 50)
-ggplot2::ggsave("figures/EBSfoodwebplot2.png", p , width= 16, height= 10)
+ggplot2::ggsave("figures/EBSfoodwebplot2.png", wp , width= 16, height= 10)
 
 
 }
