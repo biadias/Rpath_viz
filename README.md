@@ -1,4 +1,11 @@
-# Rpath_viz
+# rpathviz
+
+<!-- badges: start -->
+  [![R-CMD-check](https://github.com/biadias/rpathviz/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/biadias/rpathviz/actions/workflows/R-CMD-check.yaml)
+  [![Codecov test coverage](https://codecov.io/gh/biadias/rpathviz/graph/badge.svg)](https://app.codecov.io/gh/biadias/rpathviz)
+  <!-- badges: end -->
+
+
 Vizualizations for the Rpath package.
 
 ggraph.webplot.Rpath() generates the plot below. 

@@ -1,0 +1,35 @@
+Package: rpathviz
+Title: Beautiful plots for Ecopath/Rpath package
+Version: 0.0.0.9000
+Authors@R: c(
+    person("Bia", "Dias", , "bia.dias@noaa.gov", role = c("aut", "cre"), comment=c(ORCID="0000-0001-5905-4044")),
+    person("Kerim", "Aydin", , "kerim.aydin@noaa.gov", role = c("aut"))
+    )
+Description: Visualization package companion for Ecopath/Rpath. You load a Rpath object and rpathviz provides beautiful plots of your food web and simulations using ggraph and plotly. 
+License: MIT + file LICENSE
+Encoding: UTF-8
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.3.2
+URL: https://github.com/biadias/rpathviz, https://biadias.github.io/rpathviz
+Imports:
+    plotly,
+    purrr,
+    Rpath,
+    dplyr,
+    ggplot2,
+    tibble,
+    tidygraph,
+    tidyr,
+    tidyselect,
+    ggraph,
+    grDevices,
+    igraph,
+    magrittr,
+    rlang,
+    stats
+Suggests: 
+    knitr,
+    rmarkdown
+VignetteBuilder: knitr
+Remotes:
+  NOAA-EDAB/Rpath
