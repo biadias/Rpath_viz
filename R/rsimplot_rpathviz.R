@@ -22,9 +22,9 @@
 #' @examples
 #' \dontrun{
 #' # create the Rsim object
-#' library(Rpath)
-#' runObj <- rsim.scenario(rpath(REco.params), REco.params, years= 1:50)
-#' Rsim.output <- rsim.run(runObj, years= 1:50)
+#' runObj <- Rpath::rsim.scenario(Rpath::rpath(Rpath::REco.params), Rpath::REco.params, years= 1:50)
+#' Rsim.output <- Rpath::rsim.run(runObj, years= 1:50)
+#'
 #' # plot the Rsim object two default color blind friendly palettes
 #' rsimplotviz(Rsim.output, eco.name= "Anchovy Bay", spname = "all",
 #' palette= "rsim_pal_dark")
